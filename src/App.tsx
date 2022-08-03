@@ -1,25 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { type } from '@testing-library/user-event/dist/type';
+import React, { Fragment, useEffect, useState } from 'react';
+import db from './firebase'
+import { collection, getDocs, query } from "firebase/firestore";
+
+type User = {
+  id: string;
+  name: string;
+  height: number;
+};
+
 
 function App() {
+  const [players, setPlayers] = useState<User[]>([]);
+
+  // useEffect( () => {
+  //   const playersRef =  getDocs(collection(db, 'players'));
+  //   playersRef.forEach((playerRef) => {
+  //     console.log(playerRef)
+  //   } )
+  // })
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <h2>Players</h2>
+      {players.map((player) => (
+        <div key={player.id}>
+          {player.name}
+          ({player.height}cm)
+        </div>
+      ))}
+    </>
   );
 }
 
