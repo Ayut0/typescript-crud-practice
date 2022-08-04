@@ -1,7 +1,7 @@
 import { type } from '@testing-library/user-event/dist/type';
-import React, { Fragment, useEffect, useState } from 'react';
-import db from './firebase'
-import { collection, getDocs, query } from "firebase/firestore";
+import  {  useEffect, useState } from 'react';
+import { db } from './firebase';
+import { collection, getDocs, } from "firebase/firestore";
 
 type User = {
   id: string;
@@ -12,23 +12,26 @@ type User = {
 
 function App() {
   const [players, setPlayers] = useState<User[]>([]);
+  const playersRef = collection(db, 'Players');
 
-  // useEffect( () => {
-  //   const playersRef =  getDocs(collection(db, 'players'));
-  //   playersRef.forEach((playerRef) => {
-  //     console.log(playerRef)
-  //   } )
-  // })
+  useEffect( () => {
+    const getPlayers =async () => {
+      const data = await getDocs(playersRef);
+      console.log(data.docs)
+      // setPlayers(data.docs.map((doc) => ({...doc.data(), id: doc.id})))
+    }
+
+    getPlayers()
+    // const docSnap = await getDoc(playersRef);
+    // playersRef.forEach((playerRef) => {
+    //   console.log(playerRef)
+    // } )
+  })
 
   return (
     <>
       <h2>Players</h2>
-      {players.map((player) => (
-        <div key={player.id}>
-          {player.name}
-          ({player.height}cm)
-        </div>
-      ))}
+      
     </>
   );
 }
