@@ -14,24 +14,29 @@ function App() {
   const [players, setPlayers] = useState<User[]>([]);
   const playersRef = collection(db, 'Players');
 
+  const getPlayers =async () => {
+    const data = await getDocs(playersRef);
+    console.log(data);
+    const playerLists: any[] = [];
+    data.forEach((doc) => {
+      console.log(doc.id, doc.data());
+      playerLists.push({ ...doc.data(), id: doc.id });
+    })
+    console.log(playerLists);
+    setPlayers(playerLists);
+  }
   useEffect( () => {
-    const getPlayers =async () => {
-      const data = await getDocs(playersRef);
-      console.log(data.docs)
-      // setPlayers(data.docs.map((doc) => ({...doc.data(), id: doc.id})))
-    }
-
-    getPlayers()
-    // const docSnap = await getDoc(playersRef);
-    // playersRef.forEach((playerRef) => {
-    //   console.log(playerRef)
-    // } )
-  })
+    getPlayers();
+  },[])
 
   return (
     <>
       <h2>Players</h2>
-      
+      {players.map((player) => (
+        <div>
+          {player.name} ({player.height}cm)
+        </div>
+      ))}
     </>
   );
 }
