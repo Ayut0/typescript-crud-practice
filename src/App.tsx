@@ -1,7 +1,7 @@
 // import { type } from '@testing-library/user-event/dist/type';
 import  {  useEffect, useState } from 'react';
 import { db } from './firebase';
-import { collection, deleteDoc, doc, getDocs, addDoc, serverTimestamp} from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, addDoc, serverTimestamp, updateDoc} from "firebase/firestore";
 
 type User = {
   id: string;
@@ -68,6 +68,17 @@ function App() {
     }
   }
 
+  //Update
+  const updateHandler = async (id:string, name:string, height:number) =>{
+    const playerDoc = doc(db, 'Players', id)
+    const newFields = {
+      name: addUserName,
+      height: addUserHeight,
+    };
+    await updateDoc(playerDoc, newFields);
+    await getPlayers();
+  }
+
   return (
     <>
       <h2>Players</h2>
@@ -90,6 +101,7 @@ function App() {
               <td>({player.height}cm)</td>
               <td>
                 <button onClick={() => deleteHandler(player.id)}>Delete</button>
+                <button onClick={() => updateHandler(player.id, player.name, player.height)}>Update</button>
               </td>
             </tr>
           ))}
