@@ -3,33 +3,33 @@ import  {  useEffect, useState } from 'react';
 import { db } from './firebase';
 import { collection, deleteDoc, doc, getDocs, addDoc, serverTimestamp, updateDoc} from "firebase/firestore";
 
-type User = {
-  id: string;
-  name: string;
-  height: number;
-};
 
 // interface playerSend  {
-//   id: string;
-//   name: string;
-//   height: number;
-// }
-// interface playerReceives  {
-//   id: string;
-//   name: string;
-//   height: number;
-// }
-//const playerArray:[] =[]
-
-function App() {
+  //   id: string;
+  //   name: string;
+  //   height: number;
+  // }
+  // interface playerReceives  {
+    //   id: string;
+    //   name: string;
+    //   height: number;
+    // }
+    //const playerArray:[] =[]
+    
+const App: React.FC = () =>{
+      type User = {
+        id: string,
+        name: string,
+        height: number,
+      };
   const [players, setPlayers] = useState<User[]>([]);
   const playersRef = collection(db, 'Players');
   const [addUserName, setAddUserName] = useState<string>('');
-  const [addUserHeight, setAddUserHeight] = useState<number>();
+  const [addUserHeight, setAddUserHeight] = useState<number>(0);
 
   const getPlayers =async () => {
     const data = await getDocs(playersRef);
-    console.log(data.docs[0].data());
+   
     // const playerLists: any[] = [];
     // data.forEach((doc) => {
     //   console.log(doc.id, doc.data());
@@ -57,14 +57,24 @@ function App() {
   }
 
   //Add
-  const addHandler =async () => {
+  const addHandler =async (e:any) => {
     if(window.confirm('Do you want to add this player?')){
+      const newPlayer: User = {
+        name: addUserName,
+        height: addUserHeight,
+        id: 'ausdhsauhuiguid',
+      }
+
+      await console.log(newPlayer);
+
       await addDoc(playersRef, {
         name: addUserName,
         height: addUserHeight,
         Timestamp: serverTimestamp()
       });
       await getPlayers();
+      setAddUserName('');
+      setAddUserHeight(0);
     }
   }
 
@@ -91,7 +101,7 @@ function App() {
           HEIGHT: {''}
           <input type="number" value={addUserHeight} onChange={(e) => setAddUserHeight(e.target.valueAsNumber)} />
         </label>
-        <button onClick={() => addHandler()}>Add new player</button>
+        <button onClick={(e) => addHandler(e)}>Add new player</button>
       </div>
       <table>
         <tbody>
